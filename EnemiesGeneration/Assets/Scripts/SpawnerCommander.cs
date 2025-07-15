@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpawnerCommander : MonoBehaviour
 {
-    [SerializeField] List<Spawner> _spawners;
+    [SerializeField] private List<Spawner> _spawners;
 
     private float _delay = 2;
 
@@ -15,17 +15,15 @@ public class SpawnerCommander : MonoBehaviour
 
     private IEnumerator AssignSpawner()
     {
-        while (true)
+        while (enabled)
         {
-            var wait = new WaitForSeconds(_delay);
-
             if (_spawners.Count > 0)
             {
                 int randomIndex = Random.Range(0, _spawners.Count);
                 _spawners[randomIndex].SpawnEnemy();
             }
 
-            yield return wait;
+            yield return new WaitForSeconds(_delay);
         }
     }
 }

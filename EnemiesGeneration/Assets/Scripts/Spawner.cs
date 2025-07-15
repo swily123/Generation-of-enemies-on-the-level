@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] Enemy _enemyPrefab;
+    [SerializeField] private Enemy _enemyPrefab;
 
     private float _maxRandomRange = 10f;
     private float _minRandomRange = -10f;
