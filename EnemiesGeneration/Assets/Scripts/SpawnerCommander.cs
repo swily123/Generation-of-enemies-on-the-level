@@ -6,7 +6,7 @@ public class SpawnerCommander : MonoBehaviour
 {
     [SerializeField] private List<Spawner> _spawners;
 
-    private float _delay = 2;
+    private float _delay = 10;
 
     private void Start()
     {

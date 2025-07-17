@@ -1,24 +1,27 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private Enemy _enemyPrefab;
-
-    private float _maxRandomRange = 10f;
-    private float _minRandomRange = -10f;
+    [SerializeField] private List<GameObject> _waypoints = new List<GameObject>();
 
     public void SpawnEnemy()
     {
         Enemy spawnedEnemy = Instantiate(_enemyPrefab, transform.position, Quaternion.identity);
-        GiveDirectionEnemy(spawnedEnemy);
+        StartCoroutine(GoByWaypoints(spawnedEnemy, _waypoints));
     }
 
-    private void GiveDirectionEnemy(Enemy enemy)
+    private IEnumerator GoByWaypoints(Enemy enemy, List<GameObject> waypoints)
     {
-        float directionX = Random.Range(_minRandomRange, _maxRandomRange + 1);
-        float directionZ = Random.Range(_minRandomRange, _maxRandomRange + 1);
-        Vector3 randomDirection = new Vector3 (directionX, 0, directionZ);
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            Transform point = waypoints[i].transform;
+            Coroutine coroutine = StartCoroutine(enemy.GoToPoint(point));
 
-        enemy.TakeDirection(randomDirection.normalized);
+            yield return new WaitUntil(() => Vector3.Distance(enemy.transform.position, point.position) <= 0.1f);
+            StopCoroutine(coroutine);
+        }
     }
 }

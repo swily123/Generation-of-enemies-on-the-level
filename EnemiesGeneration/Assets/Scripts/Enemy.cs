@@ -1,25 +1,28 @@
+using System.Collections;
 using UnityEngine;
-
-[RequireComponent(typeof(Rigidbody))]
 
 public class Enemy : MonoBehaviour
 {
-    private float _speed = 2f;
     private Rigidbody _rigidbody;
-    private Vector3 _direction = Vector3.zero;
+    private float _speed = 20f;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    public IEnumerator GoToPoint(Transform target)
     {
-        _rigidbody.MovePosition(_rigidbody.position + _direction * _speed * Time.deltaTime);
-    }
+        while (enabled)
+        {
+            Vector3 direction = (target.position - transform.position).normalized;
+            direction.y = 0;
 
-    public void TakeDirection(Vector3 direction)
-    {
-        _direction = direction;
+            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            //transform.Translate(_speed * Time.deltaTime * Vector3.forward);
+            _rigidbody.MovePosition(transform.position + direction * Time.deltaTime * _speed);
+
+            yield return null;
+        }
     }
 }
